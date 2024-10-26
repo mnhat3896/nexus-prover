@@ -6,12 +6,24 @@
 - Download file script: `curl https://cli.nexus.xyz/install.sh > nexus.sh`
 
 ### Update `nexus.sh` file
+- To accept the terms noninteractively
+- Specify absolute path of cargo and rustc
 ```
 #!/bin/sh
 
 /root/.cargo/bin/rustc --version || curl https://sh.rustup.rs -sSf | sh
 NEXUS_HOME=$HOME/.nexus
 
+NONINTERACTIVE=1
+while [ -z "$NONINTERACTIVE" ]; do
+    read -p "Do you agree to the Nexus Beta Terms of Use (https://nexus.xyz/terms-of-use)? (Y/n) " yn </dev/tty
+    case $yn in
+        [Nn]* ) exit;;
+        [Yy]* ) break;;
+        "" ) break;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
 
 git --version 2>&1 >/dev/null
 GIT_IS_AVAILABLE=$?
